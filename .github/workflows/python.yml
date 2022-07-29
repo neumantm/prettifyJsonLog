@@ -28,7 +28,7 @@ jobs:
     - name: Build package
       run: python -m build
     - name: Twine check
-      run: python -m twine check dist/*
+      run: python -m twine check --strict dist/*
     - uses: actions/upload-artifact@v3
       with:
         name: python-dist
