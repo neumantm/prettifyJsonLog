@@ -10,7 +10,7 @@ setup(name='prettifyJsonLog',
 
       It reads log lines from stdin.
       Each line must be one log entry formatted as a JSON object.
-      """
+      """,
       url="https://github.com/neumantm/prettifyJsonLog",
       license="MIT",
       author='Tim Neumann',
