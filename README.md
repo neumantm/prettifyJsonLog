@@ -1,4 +1,6 @@
 # prettifyJsonLog
+![build badge](https://github.com/neumantm/prettifyJsonLog/actions/workflows/python.yml/badge.svg)
+
 A small python programm to make json log formats human readable
 
 It reads log lines from stdin.
