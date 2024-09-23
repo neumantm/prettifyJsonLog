@@ -24,7 +24,7 @@ def get_header_value(entry: Dict[str,Any], col_idx: int) -> Tuple[Optional[str],
     """Return consumed key and header value"""
     for col_name in HEADER_COLUMNS[col_idx]:
         if col_name in entry:
-            return col_name, entry[col_name]
+            return col_name, str(entry[col_name])
     return None, ""
 
 def print_header(entry: Dict[str,Any]) -> List[str]:
