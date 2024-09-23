@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from typing import Dict, List, Any, Tuple, Optional
 
+import sys
+import os
 import json
 import fileinput
 import shutil
@@ -93,4 +95,10 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        try:
+            sys.exit(130)
+        except SystemExit:
+            os._exit(130)
