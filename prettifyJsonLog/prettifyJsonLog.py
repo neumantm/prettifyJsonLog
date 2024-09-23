@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from typing import Dict, List, Any, Tuple, Optional
 
+from itertools import islice
+
 import sys
 import os
 import json
@@ -13,14 +15,16 @@ HEADER_DELIMITER= " "
 def print_string(string: str, indent: int, continued_add_indent: int = 4):
     remaining_string = string
     effective_indent = indent
+    effective_term_width = term_width
     while len(remaining_string) > 0:
-        data_width = term_width - effective_indent
+        if effective_indent > effective_term_width - 10:
+            effective_term_width += 10
+        data_width = effective_term_width - effective_indent
         string_part = remaining_string[0:data_width]
         remaining_string = remaining_string[data_width:]
         print(" "*effective_indent + string_part)
         if effective_indent == indent:
             effective_indent += continued_add_indent
-
 
 def get_header_value(entry: Dict[str,Any], col_idx: int) -> Tuple[Optional[str], str]:
     """Return consumed key and header value"""
@@ -44,28 +48,42 @@ def print_header(entry: Dict[str,Any]) -> List[str]:
 
 def _print_attributes_list(attributes: List[Any], indent: int, prefix=""):
     first = True
-    for attribute in attributes:
+    for attribute in attributes[0:30]:
         if first:
             print_attributes(attribute, indent, prefix + "- ")
             first = False
         else:
             print_attributes(attribute, indent + len(prefix), "- ")
+    if len(attributes) > 30:
+        print_string(f"[... {len(attributes)-30} more items]", indent + len(prefix))
 
 def _print_attributes_dict(attributes: Dict[str, Any], indent: int, prefix=""):
     key_length = 0
     for key in attributes:
         k_l = len(key)
+        if(k_l > term_width/4):
+            continue
         if k_l > key_length:
             key_length = k_l
 
     first = True
-    for key, value in attributes.items():
+    for key, value in islice(attributes.items(), 30):
         padded_key = key.ljust(key_length) + ": "
         if first:
-            print_attributes(value, indent, prefix + padded_key)
+            if(len(key) > term_width/4):
+                print_string(prefix + padded_key, indent)
+                print_attributes(value, indent + 2)
+            else:
+                print_attributes(value, indent, prefix + padded_key)
             first = False
         else:
-            print_attributes(value, indent + len(prefix), padded_key)
+            if(len(key) > term_width/4):
+                print_string(padded_key, indent + len(prefix))
+                print_attributes(value, indent + len(prefix) + 2)
+            else:
+                print_attributes(value, indent + len(prefix), padded_key)
+    if len(attributes.keys()) > 30:
+        print_string(f"[... {len(attributes.keys())-30} more items]", indent + len(prefix))
 
 def print_attributes(attributes: Any, indent: int = 2, prefix=""):
     if isinstance(attributes, list):
