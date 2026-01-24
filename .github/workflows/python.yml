@@ -41,7 +41,7 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
     steps:
     - uses: actions/checkout@v6
-    - uses: actions/download-artifact@v5
+    - uses: actions/download-artifact@v7
       with:
         name: python-dist
         path: dist
